@@ -27,7 +27,7 @@ from werkzeug.datastructures import ImmutableList
 from werkzeug.local import LocalProxy
 
 from .forms import ChangePasswordForm, ConfirmRegisterForm, \
-    ForgotPasswordForm, LoginForm, PasswordlessLoginForm, RegisterForm, \
+    ForgotPasswordForm, LoginForm, ApiLoginForm, PasswordlessLoginForm, RegisterForm, \
     ResetPasswordForm, SendConfirmationForm
 from .utils import _
 from .utils import config_value as cv
@@ -64,6 +64,7 @@ _default_config = {
         'plaintext',
     },
     'LOGIN_URL': '/login',
+    'API_LOGIN_URL': '/api/login',
     'LOGOUT_URL': '/logout',
     'REGISTER_URL': '/register',
     'RESET_URL': '/reset',
@@ -185,6 +186,8 @@ _default_messages = {
         _('Instructions to login have been sent to %(email)s.'), 'success'),
     'INVALID_LOGIN_TOKEN': (
         _('Invalid login token.'), 'error'),
+    'INVALID_LOGIN_ATTEMPT': (
+        _('Invalid request.'), 'error'),
     'DISABLED_ACCOUNT': (
         _('Account is disabled.'), 'error'),
     'EMAIL_NOT_PROVIDED': (
@@ -221,6 +224,7 @@ _default_messages = {
 
 _default_forms = {
     'login_form': LoginForm,
+    'api_login_form': ApiLoginForm,
     'confirm_register_form': ConfirmRegisterForm,
     'register_form': RegisterForm,
     'forgot_password_form': ForgotPasswordForm,
@@ -450,6 +454,9 @@ class _SecurityState(object):
 
     def login_context_processor(self, fn):
         self._add_ctx_processor('login', fn)
+
+    def api_login_context_processor(self, fn):
+        self._add_ctx_processor('api_login', fn)
 
     def register_context_processor(self, fn):
         self._add_ctx_processor('register', fn)
