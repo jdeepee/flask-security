@@ -299,7 +299,7 @@ class ApiLoginForm(APIForm, NextFormMixin):
             # Reduce timing variation between existing and non-existung users
             hash_password(self.password.data)
             return False
-        if not verify_and_update_password(self.password.data, self.user):
+        if not self.user.verify_and_update_password(self.password.data):
             self.password.errors.append(get_message('INVALID_PASSWORD')[0])
             return False
         if requires_confirmation(self.user):
